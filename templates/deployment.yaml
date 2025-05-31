@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metrics-server
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: metrics-server
+  template:
+    metadata:
+      labels:
+        app: metrics-server
+    spec:
+      serviceAccountName: metrics-server
+      containers:
+        - name: metrics-server
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --kubelet-insecure-tls
+            - --kubelet-preferred-address-types=InternalIP
+          ports:
+            - containerPort: 4443
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
