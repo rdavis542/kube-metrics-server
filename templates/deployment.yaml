@@ -27,7 +27,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             - name: tmp-dir
-              mountPath: {{ .Values.mountPath }}
+              mountPath: /tmp
       volumes:
         - name: tmp-dir
           emptyDir: {}
