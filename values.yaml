@@ -1,13 +1,24 @@
 replicaCount: 1
 
 image:
-  repository: k8s.gcr.io/metrics-server/metrics-server
-  tag: v0.6.3
+  repository: registry.k8s.io/metrics-server/metrics-server
+  tag: v0.7.0
   pullPolicy: IfNotPresent
 
-service:
-  type: ClusterIP
-  port: 443
+args:
+  - --cert-dir=/tmp
+  - --secure-port=4443
+  - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+  - --kubelet-insecure-tls
+  - --metric-resolution=15s
+
+volumeMounts:
+  - name: tmp-dir
+    mountPath: /tmp
+
+volumes:
+  - name: tmp-dir
+    emptyDir: {}
 
 resources:
   requests:
@@ -16,3 +27,14 @@ resources:
   limits:
     cpu: 200m
     memory: 300Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 2000

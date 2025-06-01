@@ -18,9 +18,18 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
+            - --cert-dir=/tmp
             - --kubelet-insecure-tls
             - --kubelet-preferred-address-types=InternalIP
           ports:
             - containerPort: 4443
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: {{ .Values.volumeMounts.name }}
+              mountPath: {{ .Values.mountPath }}
+      volumes:
+        - name: tmp-dir
+          emptyDir: {}
+
+
