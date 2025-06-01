@@ -5,6 +5,10 @@ image:
   tag: v0.7.0
   pullPolicy: IfNotPresent
 
+service:
+  type: ClusterIP
+  port: 8080
+
 args:
   - --cert-dir=/tmp
   - --secure-port=4443
